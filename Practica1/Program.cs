@@ -7,15 +7,21 @@ namespace Practica1 // Note: actual namespace depends on the project name.
         static Random rnd = new Random(); // generador de aleatorios (para mover abeja)
         const int ANCHO = 12, ALTO = 9; // dimensiones del área de juego
         public static void Main(string[] args)
-        {        
-        Console.SetWindowSize(ANCHO, ALTO); // tamaño de la consola
-        int jugF = 6, jugC = 7; // posición del jugador
-        int abejaF = rnd.Next(0, ALTO - 1);  // posicion de la abeja fil
-        //int abejaC = rnd.Next(0, ANCHO-1); // posición de la abeja col
-        int abejaC = ANCHO / 2;
-        int delta = 300; // retardo entre frames (ms)
-        bool colision = false; // colisión entre abeja y jugador
-        while (!colision) {
+        {
+            Console.CursorVisible = false;
+            Console.SetWindowSize(ANCHO, ALTO); // tamaño de la consola
+            int jugF = 6, jugC = 7; // posición del jugador
+            int abejaF = rnd.Next(0, ALTO - 1);  // posicion de la abeja fil
+            //int abejaC = rnd.Next(0, ANCHO-1); // posición de la abeja col
+            int abejaC = ANCHO / 2;
+            int delta = 100; // retardo entre frames (ms)
+            bool colision = false; // colisión entre abeja y jugador
+
+            // Renderizado inicial
+            renderNoCollision(jugC, jugF, abejaC, abejaF);
+
+            // Bucle del juego
+                while (!colision) {
                 // recogida de de input
                 string s = "";
                 while (Console.KeyAvailable) s = (Console.ReadKey(true)).KeyChar.ToString();
@@ -23,89 +29,97 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                 switch (s)
                 {
                     case "w":
-                        if (jugF > 0) jugF--; // Move up
-                        break;
-                    case "s":
-                        if (jugF < ALTO - 1) jugF++; // Move down
-                        break;
-                    case "a":
-                        if (jugC > 0) jugC--; // Move left
-                        break;
-                    case "d":
-                        if (jugC < ANCHO - 1) jugC++; // Move right
-                        break;
                     case "W":
                         if (jugF > 0) jugF--; // Move up
                         break;
+                    case "s":
                     case "S":
                         if (jugF < ALTO - 1) jugF++; // Move down
                         break;
+                    case "a":
                     case "A":
                         if (jugC > 0) jugC--; // Move left
                         break;
+                    case "d":
                     case "D":
                         if (jugC < ANCHO - 1) jugC++; // Move right
                         break;
                 }
-
-                // movimiento aleatorio de la abeja
-                int direccion = rnd.Next(1, 5);  // Genera un número aleatorio entre 1 y 4
-
-                switch (direccion)
-                {
-                    case 1:  // Arriba
-                        if (abejaF > 0) abejaF--;
-                        break;
-                    case 2:  // Abajo
-                        if (abejaF < ALTO - 1) abejaF++;
-                        break;
-                    case 3:  // Izquierda
-                        if (abejaC > 0) abejaC--;
-                        break;
-                    case 4:  // Derecha
-                        if (abejaC < ANCHO - 1) abejaC++;
-                        break;
-                }
-
-                // detección de colisión
+                // Detección de colisión después de mover al jugador
                 if (abejaF == jugF && abejaC == jugC)
                 {
                     colision = true;
                 }
 
-                // renderizado de las entidades en consola
-                Console.Clear();
-                Console.SetCursorPosition(jugC, jugF);
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write('O');
                 if (!colision)
                 {
-                    Console.SetCursorPosition(abejaC, abejaF);
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.Write('+');
+                    // movimiento aleatorio de la abeja
+                    movimientoAbeja(ref abejaC, ref abejaF);
+
+                    // Detección de colisión después de mover a la abeja
+                    if (abejaF == jugF && abejaC == jugC)
+                    {
+                        colision = true;
+                    }
                 }
-                if(colision)
+
+                // renderizado de las entidades en consola
+                if (!colision)
                 {
-                    Console.SetCursorPosition(jugC, jugF);
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write('*');
+                    renderNoCollision(jugC, jugF, abejaC, abejaF);
+                }
+                else
+                {
+                    renderCollision(jugC, jugF);
                 }
 
                 // retardo entre frames
                 System.Threading.Thread.Sleep(delta);
-
-
             }
+        } 
+        static void renderNoCollision(int jugC, int jugF, int abejaC, int abejaF)
+        {
+            Console.Clear();
+            Console.SetCursorPosition(jugC, jugF);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write('O');
+            Console.SetCursorPosition(abejaC, abejaF);
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write('+');    
         }
+
+        static void renderCollision( int jugC,  int jugF)
+        {
+            Console.Clear();
+            Console.SetCursorPosition(jugC, jugF);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write('*');
+            Console.Beep(); // Sonido de muerte
+        }
+
+        static void movimientoAbeja(ref int abejaC, ref int abejaF)
+        {
+
+            // movimiento aleatorio de la abeja
+            int direccion = rnd.Next(1, 5);  // Genera un número aleatorio entre 1 y 4
+
+            switch (direccion)
+            {
+                case 1:  // Arriba
+                    if (abejaF > 0) abejaF--;
+                    break;
+                case 2:  // Abajo
+                    if (abejaF < ALTO - 1) abejaF++;
+                    break;
+                case 3:  // Izquierda
+                    if (abejaC > 0) abejaC--;
+                    break;
+                case 4:  // Derecha
+                    if (abejaC < ANCHO - 1) abejaC++;
+                    break;
+            }
+        }       
     }
 }
+   
 
-/*En cada vuelta del bucle se hacen las siguientes acciones: lectura del input, movimiento del
-jugador, movimiento de la abeja, detección de colisión, renderizado y retardo (ya implementado).
-La primera acción es la recogida del input que se da ya implementada en las líneas 3 y 4. Estas
-instrucciones hacen lectura no bloqueante de teclado: si se pulsa una tecla, se lee y se guarda su
-valor en s; si no hay pulsación la ejecución continúa con (s=””). En cualquier caso la ejecución
-no se para como ocurriría con la lectura (bloqueante) habitual Console.ReadLine(). El while de
-línea 4 funciona como sigue: si se pulsa más de una tecla en el mismo frame se consumen todas
-las pulsaciones, pero se guarda como input solo la última de ellas. . . ¿por qué es conveniente este
-comportamiento?*/
