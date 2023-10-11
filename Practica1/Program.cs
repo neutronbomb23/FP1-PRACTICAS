@@ -9,9 +9,11 @@ namespace Practica1 // Note: actual namespace depends on the project name.
         public static void Main(string[] args)
         {        
         Console.SetWindowSize(ANCHO, ALTO); // tamaño de la consola
-        int jugF = 6, jugC = 7,  // posición del jugador
-        abejaF, abejaC, // posición de la abeja
-        delta = 300; // retardo entre frames (ms)
+        int jugF = 6, jugC = 7; // posición del jugador
+        int abejaF = rnd.Next(0, ALTO - 1);  // posicion de la abeja fil
+        //int abejaC = rnd.Next(0, ANCHO-1); // posición de la abeja col
+        int abejaC = ANCHO / 2;
+        int delta = 300; // retardo entre frames (ms)
         bool colision = false; // colisión entre abeja y jugador
         while (!colision) {
                 // recogida de de input
@@ -47,11 +49,26 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                 }
 
                 // movimiento aleatorio de la abeja
-                int beeF = rnd.Next(0,ALTO -1);
-                int beeC = rnd.Next(0, ANCHO - 1);
+                int direccion = rnd.Next(1, 5);  // Genera un número aleatorio entre 1 y 4
+
+                switch (direccion)
+                {
+                    case 1:  // Arriba
+                        if (abejaF > 0) abejaF--;
+                        break;
+                    case 2:  // Abajo
+                        if (abejaF < ALTO - 1) abejaF++;
+                        break;
+                    case 3:  // Izquierda
+                        if (abejaC > 0) abejaC--;
+                        break;
+                    case 4:  // Derecha
+                        if (abejaC < ANCHO - 1) abejaC++;
+                        break;
+                }
 
                 // detección de colisión
-                if (beeF == jugF && beeC == jugC)
+                if (abejaF == jugF && abejaC == jugC)
                 {
                     colision = true;
                 }
@@ -63,15 +80,15 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                 Console.Write('O');
                 if (!colision)
                 {
-                    Console.SetCursorPosition(beeC, beeF);
+                    Console.SetCursorPosition(abejaC, abejaF);
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.Write('*');
+                    Console.Write('+');
                 }
                 if(colision)
                 {
                     Console.SetCursorPosition(jugC, jugF);
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write('+');
+                    Console.Write('*');
                 }
 
                 // retardo entre frames

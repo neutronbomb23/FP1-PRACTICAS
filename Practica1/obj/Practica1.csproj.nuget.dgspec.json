@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dorjee\\Desktop\\Practica1\\Practica1.csproj": {}
+    "C:\\Users\\Dorjee\\Documents\\GitHub\\FP1-PRACTICAS\\Practica1\\Practica1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dorjee\\Desktop\\Practica1\\Practica1.csproj": {
+    "C:\\Users\\Dorjee\\Documents\\GitHub\\FP1-PRACTICAS\\Practica1\\Practica1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dorjee\\Desktop\\Practica1\\Practica1.csproj",
+        "projectUniqueName": "C:\\Users\\Dorjee\\Documents\\GitHub\\FP1-PRACTICAS\\Practica1\\Practica1.csproj",
         "projectName": "Practica1",
-        "projectPath": "C:\\Users\\Dorjee\\Desktop\\Practica1\\Practica1.csproj",
+        "projectPath": "C:\\Users\\Dorjee\\Documents\\GitHub\\FP1-PRACTICAS\\Practica1\\Practica1.csproj",
         "packagesPath": "C:\\Users\\Dorjee\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dorjee\\Desktop\\Practica1\\obj\\",
+        "outputPath": "C:\\Users\\Dorjee\\Documents\\GitHub\\FP1-PRACTICAS\\Practica1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
