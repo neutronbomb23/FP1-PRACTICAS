@@ -1,4 +1,6 @@
-﻿using System;
+// Dorjee Khampa Herrezuelo Blasco
+
+using System;
 
 namespace Practica1 // Note: actual namespace depends on the project name.
 {
@@ -16,6 +18,7 @@ namespace Practica1 // Note: actual namespace depends on the project name.
             int abejaC = ANCHO / 2;
             int delta = 100; // retardo entre frames (ms)
             bool colision = false; // colisión entre abeja y jugador
+            int frameCounter = 0; // Para controlar el movimiento de la abeja cada 2 frames
 
             // Renderizado inicial
             renderNoCollision(jugC, jugF, abejaC, abejaF);
@@ -45,7 +48,7 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                         if (jugC < ANCHO - 1) jugC++; // Move right
                         break;
                 }
-                // Detección de colisión después de mover al jugador
+                //Detección de colisión después de mover al jugador
                 if (abejaF == jugF && abejaC == jugC)
                 {
                     colision = true;
@@ -53,8 +56,15 @@ namespace Practica1 // Note: actual namespace depends on the project name.
 
                 if (!colision)
                 {
-                    // movimiento aleatorio de la abeja
-                    movimientoAbeja(ref abejaC, ref abejaF);
+                    //movimiento de la abeja sin IA
+                    //movimientoAbeja(ref abejaC, ref abejaF);
+                    frameCounter++;
+                    if(frameCounter % 2 == 0)
+                    {  
+                        // movimiento aleatorio de la abeja
+                        movimientoIAAbejaIA(jugC, jugF, ref abejaC, ref abejaF);
+
+                    }
 
                     // Detección de colisión después de mover a la abeja
                     if (abejaF == jugF && abejaC == jugC)
@@ -118,7 +128,26 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                     if (abejaC < ANCHO - 1) abejaC++;
                     break;
             }
-        }       
+        }
+
+        static void movimientoIAAbejaIA(int jugC, int jugF, ref int abejaC, ref int abejaF)
+        {
+            // Calcula el vector de dirección
+            int dirC = jugC - abejaC;
+            int dirF = jugF - abejaF;
+
+            // Decide el movimiento de la abeja basado en el vector
+            if (Math.Abs(dirC) > Math.Abs(dirF))
+            {
+                if (dirC > 0 && abejaC < ANCHO - 1) abejaC++;      // Mover a la derecha
+                else if (dirC < 0 && abejaC > 0) abejaC--;         // Mover a la izquierda
+            }
+            else
+            {
+                if (dirF > 0 && abejaF < ALTO - 1) abejaF++;       // Mover hacia abajo
+                else if (dirF < 0 && abejaF > 0) abejaF--;         // Mover hacia arriba
+            }
+        }
     }
 }
    
