@@ -19,12 +19,13 @@ namespace Practica1 // Note: actual namespace depends on the project name.
             int delta = 100; // retardo entre frames (ms)
             bool colision = false; // colisión entre abeja y jugador
             int frameCounter = 0; // Para controlar el movimiento de la abeja cada 2 frames
+            bool quit = false;
 
             // Renderizado inicial
             renderNoCollision(jugC, jugF, abejaC, abejaF);
 
             // Bucle del juego
-                while (!colision) {
+                while (!colision && !quit) {
                 // recogida de de input
                 string s = "";
                 while (Console.KeyAvailable) s = (Console.ReadKey(true)).KeyChar.ToString();
@@ -47,6 +48,11 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                     case "D":
                         if (jugC < ANCHO - 1) jugC++; // Move right
                         break;
+                    case "q":
+                    case "Q":
+                        quit = true;
+                        Console.Clear();
+                        break;
                 }
                 //Detección de colisión después de mover al jugador
                 if (abejaF == jugF && abejaC == jugC)
@@ -62,7 +68,8 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                     if(frameCounter % 2 == 0)
                     {  
                         // movimiento aleatorio de la abeja
-                        movimientoIAAbejaIA(jugC, jugF, ref abejaC, ref abejaF);
+                        //movimientoIAAbejaIA(jugC, jugF, ref abejaC, ref abejaF);
+                        movimientoAbeja(ref abejaC, ref abejaF);
 
                     }
 
@@ -105,6 +112,9 @@ namespace Practica1 // Note: actual namespace depends on the project name.
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write('*');
             Console.Beep(); // Sonido de muerte
+
+            Console.SetCursorPosition(ALTO/2);
+            cONSOLE.WriteLine("GAME OVER");
         }
 
         static void movimientoAbeja(ref int abejaC, ref int abejaF)
@@ -136,7 +146,7 @@ namespace Practica1 // Note: actual namespace depends on the project name.
             int dirC = jugC - abejaC;
             int dirF = jugF - abejaF;
 
-            // Decide el movimiento de la abeja basado en el vector
+            // Decide el movimiento calculandio la diferencia
             if (Math.Abs(dirC) > Math.Abs(dirF))
             {
                 if (dirC > 0 && abejaC < ANCHO - 1) abejaC++;      // Mover a la derecha
