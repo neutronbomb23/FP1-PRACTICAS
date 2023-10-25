@@ -13,7 +13,7 @@ namespace Practica1 // Note: actual namespace depends on the project name.
             Console.CursorVisible = false;
             Console.SetWindowSize(ANCHO, ALTO); // tamaño de la consola
             int jugF = 6, jugC = 7; // posición del jugador
-            int abejaF = rnd.Next(0, ALTO - 1);  // posicion de la abeja fil
+            int abejaF = 0;  // posicion de la abeja fil
             //int abejaC = rnd.Next(0, ANCHO-1); // posición de la abeja col
             int abejaC = ANCHO / 2;
             int delta = 100; // retardo entre frames (ms)
@@ -22,38 +22,34 @@ namespace Practica1 // Note: actual namespace depends on the project name.
             bool quit = false;
 
             // Renderizado inicial
-            renderNoCollision(jugC, jugF, abejaC, abejaF);
+            render(jugC, jugF, abejaC, abejaF, colision);
 
             // Bucle del juego
                 while (!colision && !quit) {
                 // recogida de de input
                 string s = "";
-                while (Console.KeyAvailable) s = (Console.ReadKey(true)).KeyChar.ToString();
+                while (Console.KeyAvailable)
+                    s = (Console.ReadKey(true)).KeyChar.ToString().ToUpper();
 
                 switch (s)
                 {
-                    case "w":
                     case "W":
                         if (jugF > 0) jugF--; // Move up
                         break;
-                    case "s":
                     case "S":
                         if (jugF < ALTO - 1) jugF++; // Move down
                         break;
-                    case "a":
                     case "A":
                         if (jugC > 0) jugC--; // Move left
                         break;
-                    case "d":
                     case "D":
                         if (jugC < ANCHO - 1) jugC++; // Move right
                         break;
-                    case "q":
                     case "Q":
                         quit = true;
-                        Console.Clear();
                         break;
                 }
+
                 //Detección de colisión después de mover al jugador
                 if (abejaF == jugF && abejaC == jugC)
                 {
@@ -66,10 +62,10 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                     //movimientoAbeja(ref abejaC, ref abejaF);
                     frameCounter++;
                     if(frameCounter % 2 == 0)
-                    {  
+                    {
                         // movimiento aleatorio de la abeja
-                        //movimientoIAAbejaIA(jugC, jugF, ref abejaC, ref abejaF);
-                        movimientoAbeja(ref abejaC, ref abejaF);
+                        movimientoIAAbejaIA(jugC, jugF, ref abejaC, ref abejaF);
+                        //movimientoAbeja(ref abejaC, ref abejaF);
 
                     }
 
@@ -80,49 +76,42 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                     }
                 }
 
-                // renderizado de las entidades en consola
-                if (!colision)
-                {
-                    renderNoCollision(jugC, jugF, abejaC, abejaF);
-                }
-                else
-                {
-                    renderCollision(jugC, jugF);
-                }
-
+                // renderizado de las entidades en consola   
+                render(jugC, jugF, abejaC, abejaF,colision);
+                
                 // retardo entre frames
                 System.Threading.Thread.Sleep(delta);
             }
         } 
-        static void renderNoCollision(int jugC, int jugF, int abejaC, int abejaF)
+        static void render(int jugC, int jugF, int abejaC, int abejaF, bool collision)
         {
-            Console.Clear();
-            Console.SetCursorPosition(jugC, jugF);
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write('O');
-            Console.SetCursorPosition(abejaC, abejaF);
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.Write('+');    
-        }
-
-        static void renderCollision( int jugC,  int jugF)
-        {
-            Console.Clear();
-            Console.SetCursorPosition(jugC, jugF);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write('*');
-            Console.Beep(); // Sonido de muerte
-
-            Console.SetCursorPosition(ALTO/2);
-            cONSOLE.WriteLine("GAME OVER");
+            if (collision)
+            {
+                Console.Clear();
+                Console.SetCursorPosition(jugC, jugF);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write('*');
+                Console.Beep(); // Sonido de muerte
+                Console.SetCursorPosition(ANCHO / 2, ALTO / 2);
+                Console.WriteLine("GAME OVER");
+            }
+            else
+            {
+                Console.Clear();
+                Console.SetCursorPosition(jugC, jugF);
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write('O');
+                Console.SetCursorPosition(abejaC, abejaF);
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.Write('+');
+            }
+            
         }
 
         static void movimientoAbeja(ref int abejaC, ref int abejaF)
         {
-
             // movimiento aleatorio de la abeja
             int direccion = rnd.Next(1, 5);  // Genera un número aleatorio entre 1 y 4
-
             switch (direccion)
             {
                 case 1:  // Arriba
@@ -139,7 +128,6 @@ namespace Practica1 // Note: actual namespace depends on the project name.
                     break;
             }
         }
-
         static void movimientoIAAbejaIA(int jugC, int jugF, ref int abejaC, ref int abejaF)
         {
             // Calcula el vector de dirección
